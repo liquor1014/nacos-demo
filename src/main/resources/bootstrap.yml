@@ -1,0 +1,30 @@
+server:
+  port: 7079
+logging:
+  config: classpath:log4j2.xml
+
+spring:
+  # 应用名称
+  application:
+    name: app-text
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+      config:
+        # 配置中心地址
+        server-addr: 127.0.0.1:8848
+        # 读取配置文件名
+        prefix: ${spring.application.name}-application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+        # 配置文件格式
+        file-extension: yml
+        # 配置文件的环境
+        group: DEFAULT_GROUP
+        # 共享配置
+#        shared-configs:
+#          data-id: app-text-application.yml
+#        prefix: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+#

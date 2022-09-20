@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="ERROR">
+    <Properties>
+        <property name="app">app-slab-wms</property>
+        <property name="log.root.level">INFO</property>
+        <property name="log.home">./data/applogs/app</property>
+        <property name="log.default.pattern">%-d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [${app}] [%p] %l %m%n</property>
+        <property name="log.stats.pattern">%m%n</property>
+    </Properties>
+    <appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>${log.default.pattern}</Pattern>
+            </PatternLayout>
+        </Console>
+        <RollingFile name="ROLLING_INFO" fileName="${log.home}/info.log" filePattern="${log.home}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${log.default.pattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+            <Filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT"/>
+            </Filters>
+        </RollingFile>
+        <RollingFile name="ROLLING_WARN" fileName="${log.home}/warn.log" filePattern="${log.home}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${log.default.pattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT"/>
+            </Filters>
+        </RollingFile>
+        <RollingFile name="ROLLING_ERROR" fileName="${log.home}/error.log" filePattern="${log.home}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${log.default.pattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+            <!-- <DirectWriteRolloverStrategy maxFiles="10"/> -->
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT"/>
+            </Filters>
+        </RollingFile>
+    </appenders>
+    <loggers>
+        <Root level="${log.root.level}">
+            <AppenderRef ref="ROLLING_INFO"/>
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ROLLING_WARN"/>
+            <AppenderRef ref="ROLLING_ERROR"/>
+        </Root>
+        <logger name="com.alibaba" level="ERROR"/>
+        <logger name="org" level="ERROR"/>
+    </loggers>
+</configuration>
